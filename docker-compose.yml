@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Next.js Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: life_insurance_frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source code for development (comment out for production)
+      - ./app:/app/app
+      - ./components:/app/components
+      - ./lib:/app/lib
+      - ./types:/app/types
+      - ./package.json:/app/package.json
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - life_insurance_network
+    restart: unless-stopped
+    # Use dev for development, start for production
+    command: npm run dev
+
+networks:
+  life_insurance_network:
+    driver: bridge 
